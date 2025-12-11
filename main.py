@@ -1,10 +1,10 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler
 
-# Ton token Telegram directement dans le code
+# Ton token Telegram
 TOKEN = "8476960807:AAGLf9Fy05l3A390iBjdigCNOYwtWNnVC0k"
 
-# Création du bot
+# Crée le bot
 app_bot = ApplicationBuilder().token(TOKEN).build()
 
 # Commande /start
@@ -19,21 +19,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 🔹 Livraison & Meet-up : Rapide et discret
 
 🔥 Produits disponibles
-•Coke ❄️ 
-•3mmc 🇳🇱 
-•Weed Cali 🇺🇸 
-•Weed Hollandaise 🇳🇱 
-•3x Filtré 🍫 
-•Jaune Mousseux 🧽
+•Coke ❄️ / • 3mmc 🇳🇱 / • Weed Cali 🇺🇸 / • Weed Hollandaise 🇳🇱 / • 3x Filtré 🍫 / • Jaune Mousseux 🧽
 
 📞 @Panamedelivery 📞"""
 
-    # Image directe ImgBB
-    image_url = "https://i.ibb.co/fYGqJgSr/IMG-2861.png"
+    # Image
+    image_url = "https://i.imgur.com/I2tZF2O.jpeg"
 
     # Boutons inline
     keyboard = [
-        [InlineKeyboardButton("🛒 Ouvrir Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))],
+        [InlineKeyboardButton("Ouvrir Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))],
         [InlineKeyboardButton("Option déco 1", callback_data="none")],
         [InlineKeyboardButton("Option déco 2", callback_data="none")]
     ]
@@ -47,11 +42,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=reply_markup
     )
 
-# Boutons déco (ne font rien)
+# Gestion des boutons décoratifs (ne font rien)
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.callback_query.answer()
+    query = update.callback_query
+    await query.answer()  # juste confirme le clic, pas de message
 
-# Autres commandes
+# Commandes simples
 async def bonjour(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Bonjour ! 😄")
 
