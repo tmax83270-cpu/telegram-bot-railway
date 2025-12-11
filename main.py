@@ -23,7 +23,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 • Coke ❄️ / • 3mmc 🇳🇱 / • Weed Cali 🇺🇸 / • Weed Hollandaise 🇳🇱 / 
 • 3x Filtré 🍫 / • Jaune Mousseux 🧽
 
-👉 CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX VIDÉOS, MENU, ETC 👇"""
+👉 CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX VIDÉOS, MENU, ETC 👇
+
+📞 @PanameDelivery 📞"""
 
     # Image Imgur
     image_url = "https://i.imgur.com/I2tZF2O.jpeg"
