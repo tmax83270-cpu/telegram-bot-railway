@@ -1,11 +1,10 @@
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-import os
 
-# Ton token Telegram
-TOKEN = os.environ["TELEGRAM_TOKEN"]
+# --- Ton token Telegram directement dans le code ---
+TOKEN = "8476960807:AAGLf9Fy05l3A390iBjdigCNOYwtWNnVC0k"
 
-# Crée le bot
+# --- Crée le bot Telegram ---
 app_bot = ApplicationBuilder().token(TOKEN).build()
 
 # Commande /start
@@ -25,5 +24,5 @@ app_bot.add_handler(CommandHandler("aide", aide))
 
 print("Bot Telegram en ligne...")
 
-# Lancer le bot (long polling)
+# --- Lancer le bot (long polling) ---
 app_bot.run_polling()
