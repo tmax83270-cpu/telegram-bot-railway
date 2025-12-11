@@ -11,7 +11,8 @@ app_bot = ApplicationBuilder().token(TOKEN).build()
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     
-    texte = """🗼💫 PANAME DELIVERY — PLUG PARIS OFFICIEL
+    texte = """BIENVENUE SUR LE BOT DE PANAME DELIVERY 🗼✨
+(Anciennement White Coffee 75)
 
 🔹 Zone : Paris & Île De France (75,77,78,91,92,93,94,95,60)
 🔹 Horaires : 14h/02h – 7j/7
@@ -19,9 +20,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 🔹 Livraison & Meet-up : Rapide et discret
 
 🔥 Produits disponibles
-•Coke ❄️ / • 3mmc 🇳🇱 / • Weed Cali 🇺🇸 / • Weed Hollandaise 🇳🇱 / • 3x Filtré 🍫 / • Jaune Mousseux 🧽
+• Coke ❄️ / • 3mmc 🇳🇱 / • Weed Cali 🇺🇸 / • Weed Hollandaise 🇳🇱 / 
+• 3x Filtré 🍫 / • Jaune Mousseux 🧽
 
-📞 @Panamedelivery 📞"""
+👉 CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX VIDÉOS, MENU, ETC 👇"""
 
     # Image Imgur
     image_url = "https://i.imgur.com/I2tZF2O.jpeg"
