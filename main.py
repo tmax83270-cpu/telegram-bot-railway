@@ -37,15 +37,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Envoie l'image avec texte et boutons
     await context.bot.send_photo(chat_id=chat_id, photo=image_url, caption=texte, reply_markup=reply_markup)
 
-# Gestion des boutons
+# Gestion des boutons – Option 1 : envoie un nouveau message sans supprimer l'image
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()  # confirme le clic
 
     if query.data == "option1":
-        await query.edit_message_caption(caption="Tu as choisi l’Option 1 ✅")
+        await query.message.reply_text("Tu as choisi l’Option 1 ✅")
     elif query.data == "option2":
-        await query.edit_message_caption(caption="Tu as choisi l’Option 2 ✅")
+        await query.message.reply_text("Tu as choisi l’Option 2 ✅")
 
 # Commandes simples
 async def bonjour(update: Update, context: ContextTypes.DEFAULT_TYPE):
