@@ -19,11 +19,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 🔹 Paiement : Cash uniquement
 🔹 Livraison & Meet-up : Rapide et discret
 
-🔥 Produits disponibles
-• Coke ❄️ / • 3mmc 🇳🇱 / • Weed Cali 🇺🇸 / • Weed Hollandaise 🇳🇱 / 
-• 3x Filtré 🍫 / • Jaune Mousseux 🧽
-
-👉 CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX VIDÉOS, MENU, ETC 👇
+👉 CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO, VIDÉOS, MENU, ETC 👇
 
 📞 @PanameDelivery 📞"""
 
