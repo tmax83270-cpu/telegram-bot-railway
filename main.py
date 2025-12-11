@@ -1,7 +1,7 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler
 
-# Ton token directement dans le code
+# Ton token Telegram
 TOKEN = "8476960807:AAGLf9Fy05l3A390iBjdigCNOYwtWNnVC0k"
 
 # Crée le bot
@@ -10,8 +10,22 @@ app_bot = ApplicationBuilder().token(TOKEN).build()
 # Commande /start avec image, texte et boutons
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
-    texte = "Bienvenue sur mon bot ! 🚀\nChoisis une option :"
-    image_url = "https://i.imgur.com/yourimage.jpg"  # remplace par ton image
+    
+    # Texte personnalisé
+    texte = """🗼💫 PANAME DELIVERY — PLUG PARIS OFFICIEL
+
+🔹 Zone : Paris & Île De France (75,77,78,91,92,93,94,95,60)
+🔹 Horaires : 14h/02h – 7j/7
+🔹 Paiement : Cash uniquement
+🔹 Livraison & Meet-up : Rapide et discret
+
+🔥 Produits disponibles
+•Coke ❄️ / • 3mmc 🇳🇱 / • Weed Cali 🇺🇸 / • Weed Hollandaise 🇳🇱 / • 3x Filtré 🍫 / • Jaune Mousseux 🧽
+
+📞 @Panamedelivery 📞"""
+
+    # Lien direct de ton image
+    image_url = "https://i.imgur.com/I2tZF2O.jpeg"
 
     # Boutons inline
     keyboard = [
@@ -44,7 +58,7 @@ async def aide(update: Update, context: ContextTypes.DEFAULT_TYPE):
 app_bot.add_handler(CommandHandler("start", start))
 app_bot.add_handler(CommandHandler("bonjour", bonjour))
 app_bot.add_handler(CommandHandler("aide", aide))
-app_bot.add_handler(CallbackQueryHandler(button_handler))  # gestion des boutons
+app_bot.add_handler(CallbackQueryHandler(button_handler))
 
 print("Bot Telegram en ligne...")
 
