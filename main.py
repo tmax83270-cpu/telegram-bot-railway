@@ -4,7 +4,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, Callb
 # Ton token Telegram
 TOKEN = "8476960807:AAGLf9Fy05l3A390iBjdigCNOYwtWNnVC0k"
 
-# Crée le bot
+# Création du bot
 app_bot = ApplicationBuilder().token(TOKEN).build()
 
 # Commande /start
@@ -23,14 +23,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 📞 @Panamedelivery 📞"""
 
-    # Image
+    # Image Imgur
     image_url = "https://i.imgur.com/I2tZF2O.jpeg"
 
     # Boutons inline
     keyboard = [
-        [InlineKeyboardButton("Ouvrir Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))],
-        [InlineKeyboardButton("Option déco 1", callback_data="none")],
-        [InlineKeyboardButton("Option déco 2", callback_data="none")]
+        [InlineKeyboardButton("🛒 Ouvrir Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))],
+        [InlineKeyboardButton("📢 Canal Telegram", url="https://t.me/+2WYuiyhQblMzMGQ0")],
+        [InlineKeyboardButton("🥔 Canal Potato", url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q")],
+        [InlineKeyboardButton("🔄 Canal Retour Client", url="https://ptdym150.org/joinchat/Z72cV4vSa_ubtLHk3WYgFg")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -42,12 +43,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=reply_markup
     )
 
-# Gestion des boutons décoratifs (ne font rien)
+# Gestion des boutons (callback_data si besoin)
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer()  # juste confirme le clic, pas de message
+    await query.answer()  # confirme le clic
 
-# Commandes simples
+# Autres commandes
 async def bonjour(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Bonjour ! 😄")
 
