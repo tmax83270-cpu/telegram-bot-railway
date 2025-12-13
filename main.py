@@ -23,10 +23,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 📞 @PanameDelivery 📞"""
 
-    # Image
     image_url = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/panamedelivery.jpg"
 
-    # Boutons inline
     keyboard = [
         [InlineKeyboardButton("🛒 Ouvrir Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))],
         [InlineKeyboardButton("📢 Canal Telegram", url="https://t.me/+2WYuiyhQblMzMGQ0")],
@@ -37,13 +35,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    # Envoie l'image avec texte et boutons
-    await context.bot.send_photo(
-        chat_id=chat_id,
-        photo=image_url,
-        caption=texte,
-        reply_markup=reply_markup
-    )
+    await context.bot.send_photo(chat_id=chat_id, photo=image_url, caption=texte, reply_markup=reply_markup)
 
 # Gestion des boutons
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -51,16 +43,25 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     data = query.data
     chat_id = query.message.chat_id
 
-    # Texte à envoyer selon le bouton cliqué
+    # Images spécifiques pour chaque bouton
+    image_info = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/info.jpg"
+    image_contact = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/contact.jpg"
+
     if data == "info":
-        texte_info = """🔹 Zone : Paris & Île De France (75,77,78,91,92,93,94,95,60)
+        texte_info = """ℹ️ INFORMATIONS ℹ️
+
+🔹 Zone : Paris & Île De France (75,77,78,91,92,93,94,95,60)
 🔹 Horaires : 14h/02h – 7j/7
 🔹 Paiement : Cash uniquement
 🔹 Livraison & Meet-up : Rapide et discret"""
-        await context.bot.send_message(chat_id=chat_id, text=texte_info)
+        await context.bot.send_photo(chat_id=chat_id, photo=image_info, caption=texte_info)
+
     elif data == "contact":
-        texte_contact = "📞 Contactez-nous via Telegram ou WhatsApp pour vos commandes :\n- Telegram : @PanameDelivery\n- WhatsApp : +33XXXXXXXXX"
-        await context.bot.send_message(chat_id=chat_id, text=texte_contact)
+        texte_contact = """✉️ CONTACT ✉️
+
+📞 Telegram : @PanameDelivery
+📞 WhatsApp : +33XXXXXXXXX"""
+        await context.bot.send_photo(chat_id=chat_id, photo=image_contact, caption=texte_contact)
 
     await query.answer()  # confirme le clic
 
@@ -78,6 +79,4 @@ app_bot.add_handler(CommandHandler("aide", aide))
 app_bot.add_handler(CallbackQueryHandler(button_handler))
 
 print("Bot Telegram en ligne…")
-
-# Lancer le bot (long polling)
 app_bot.run_polling()
