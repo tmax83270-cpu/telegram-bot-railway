@@ -49,14 +49,20 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     data = query.data
+    chat_id = query.message.chat_id
 
-    # Réponse selon le bouton cliqué
+    # Texte à envoyer selon le bouton cliqué
     if data == "info":
-        await query.answer("Voici les informations : Zone, horaires, paiement, livraison…", show_alert=True)
+        texte_info = """🔹 Zone : Paris & Île De France (75,77,78,91,92,93,94,95,60)
+🔹 Horaires : 14h/02h – 7j/7
+🔹 Paiement : Cash uniquement
+🔹 Livraison & Meet-up : Rapide et discret"""
+        await context.bot.send_message(chat_id=chat_id, text=texte_info)
     elif data == "contact":
-        await query.answer("Contactez-nous via Telegram ou WhatsApp pour passer vos commandes.", show_alert=True)
-    else:
-        await query.answer()  # confirme le clic pour les autres boutons
+        texte_contact = "📞 Contactez-nous via Telegram ou WhatsApp pour vos commandes :\n- Telegram : @PanameDelivery\n- WhatsApp : +33XXXXXXXXX"
+        await context.bot.send_message(chat_id=chat_id, text=texte_contact)
+
+    await query.answer()  # confirme le clic
 
 # Autres commandes
 async def bonjour(update: Update, context: ContextTypes.DEFAULT_TYPE):
