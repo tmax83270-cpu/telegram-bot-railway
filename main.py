@@ -19,7 +19,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 🔹 Paiement : Cash uniquement
 🔹 Livraison & Meet-up : Rapide et discret
 
-👉 CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO, VIDÉOS, MENU, ETC 👇
+ CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO, VIDÉOS, MENU, ETC 👇
 
 📞 @PanameDelivery 📞"""
 
