@@ -23,7 +23,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 📞 @PanameDelivery 📞"""
 
-    # Image Imgur
+    # Image
     image_url = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/panamedelivery.jpg"
 
     # Boutons inline
@@ -31,7 +31,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("🛒 Ouvrir Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))],
         [InlineKeyboardButton("📢 Canal Telegram", url="https://t.me/+2WYuiyhQblMzMGQ0")],
         [InlineKeyboardButton("🥔 Canal Potato", url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q")],
-        [InlineKeyboardButton("🔄 Canal Retour Client", url="https://ptdym150.org/joinchat/Z72cV4vSa_ubtLHk3WYgFg")]
+        [InlineKeyboardButton("🔄 Canal Retour Client", url="https://ptdym150.org/joinchat/Z72cV4vSa_ubtLHk3WYgFg")],
+        [InlineKeyboardButton("ℹ️ Information", callback_data="info")],
+        [InlineKeyboardButton("✉️ Contact", callback_data="contact")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -43,10 +45,18 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=reply_markup
     )
 
-# Gestion des boutons (callback_data si besoin)
+# Gestion des boutons
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer()  # confirme le clic
+    data = query.data
+
+    # Réponse selon le bouton cliqué
+    if data == "info":
+        await query.answer("Voici les informations : Zone, horaires, paiement, livraison…", show_alert=True)
+    elif data == "contact":
+        await query.answer("Contactez-nous via Telegram ou WhatsApp pour passer vos commandes.", show_alert=True)
+    else:
+        await query.answer()  # confirme le clic pour les autres boutons
 
 # Autres commandes
 async def bonjour(update: Update, context: ContextTypes.DEFAULT_TYPE):
