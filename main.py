@@ -29,7 +29,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("🛒 Ouvrir Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))],
         [InlineKeyboardButton("📢 Canal Telegram", url="https://t.me/+2WYuiyhQblMzMGQ0")],
         [InlineKeyboardButton("🥔 Canal Potato", url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q")],
-        [InlineKeyboardButton("🔄 Canal Retour Client", url="https://ptdym150.org/joinchat/Z72cV4vSa_ubtLHk3WYgFg")],
         [InlineKeyboardButton("ℹ️ Information", callback_data="info")],
         [InlineKeyboardButton("✉️ Contact", callback_data="contact")]
     ]
