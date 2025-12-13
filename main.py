@@ -50,17 +50,16 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if data == "info":
         texte_info = """ℹ️ INFORMATIONS ℹ️
 
-🔹 Zone : Paris & Île De France (75,77,78,91,92,93,94,95,60)
-🔹 Horaires : 14h/02h – 7j/7
-🔹 Paiement : Cash uniquement
-🔹 Livraison & Meet-up : Rapide et discret"""
+Tout est indiqué 👆
+On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
         await context.bot.send_photo(chat_id=chat_id, photo=image_info, caption=texte_info)
 
     elif data == "contact":
         texte_contact = """✉️ CONTACT ✉️
 
 📞 Telegram : @PanameDelivery
-📞 WhatsApp : +33XXXXXXXXX"""
+
+📞 WhatsApp : +33759873968"""
         await context.bot.send_photo(chat_id=chat_id, photo=image_contact, caption=texte_contact)
 
     await query.answer()  # confirme le clic
