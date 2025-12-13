@@ -24,7 +24,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 📞 @PanameDelivery 📞"""
 
     # Image Imgur
-    image_url = "https://i.ibb.co/fYGqJgSr/IMG-2861.png"
+    image_url = "https://i.imgur.com/I2tZF2O.jpeg"
 
     # Boutons inline
     keyboard = [
