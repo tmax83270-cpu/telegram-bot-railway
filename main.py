@@ -56,9 +56,9 @@ On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
     elif data == "contact":
         texte_contact = """✉️ CONTACT ✉️
 
-📞 🔵 Telegram : @PanameDelivery 📞
+📞 🔵 Telegram : @PanameDelivery
 
-📞 🟢 WhatsApp : +33759873968 📞"""
+📞 🟢 WhatsApp : +33759873968"""
         await context.bot.send_photo(chat_id=chat_id, photo=image_contact, caption=texte_contact)
 
     await query.answer()  # confirme le clic
