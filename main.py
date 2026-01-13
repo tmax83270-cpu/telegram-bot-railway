@@ -14,7 +14,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     texte = """BIENVENUE SUR LE BOT DE PANAME DELIVERY 🗼✨
 (Anciennement White Coffee 75)
 
-🔹 Zone : Paris & Île De France (75,77,78,91,92,93,94,95,60)
+🔹 Zone : Paris & Île De France 
 🔹 Horaires : 14h/02h – 7j/7
 🔹 Paiement : Cash uniquement
 🔹 Livraison & Meet-up : Rapide et discret
