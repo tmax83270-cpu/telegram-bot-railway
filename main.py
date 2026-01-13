@@ -21,7 +21,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
  CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO, VIDÉOS, MENU, ETC 👇
 
-📞 @PanameDelivery 📞"""
+/start pour démarrer ou redémarrer le bot 🤖"""
 
     image_url = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/panamedelivery.jpg"
 
