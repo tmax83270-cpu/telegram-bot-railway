@@ -27,7 +27,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     keyboard = [
         [InlineKeyboardButton("🛒 Ouvrir Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))],
-        [InlineKeyboardButton("📢 Canal Telegram", url="https://t.me/+2WYuiyhQblMzMGQ0")],
+        [InlineKeyboardButton("📢 Canal Telegram", url="https://t.me/")],
         [InlineKeyboardButton("🥔 Canal Potato", url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q")],
         [InlineKeyboardButton("ℹ️ Information", callback_data="info")],
         [InlineKeyboardButton("✉️ Contact", callback_data="contact")]
@@ -56,9 +56,9 @@ On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
     elif data == "contact":
         texte_contact = """✉️ CONTACT ✉️
 
-📞 Telegram : @PanameDelivery
+📞 🔵 Telegram : @PanameDelivery 📞
 
-📞 WhatsApp : +33759873968"""
+📞 🟢 WhatsApp : +33759873968 📞"""
         await context.bot.send_photo(chat_id=chat_id, photo=image_contact, caption=texte_contact)
 
     await query.answer()  # confirme le clic
