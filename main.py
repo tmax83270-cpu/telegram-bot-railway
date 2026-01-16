@@ -19,22 +19,50 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 🔹 Paiement : Cash uniquement
 🔹 Livraison & Meet-up : Rapide et discret
 
- CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO, VIDÉOS, MENU, ETC 👇
+CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO, VIDÉOS, MENU, ETC 👇
 
 /start pour démarrer ou redémarrer le bot 🤖"""
 
     image_url = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/panamedelivery.jpg"
 
+    # 🔹 NOUVELLE DISPOSITION DES BOUTONS
     keyboard = [
-        [InlineKeyboardButton("🛒 Ouvrir Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))],
-        [InlineKeyboardButton("📢 Canal Telegram", url="https://t.me/")],
-        [InlineKeyboardButton("🥔 Canal Potato", url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q")],
-        [InlineKeyboardButton("ℹ️ Information", callback_data="info")],
-        [InlineKeyboardButton("✉️ Contact", callback_data="contact")]
+        [
+            InlineKeyboardButton(
+                "🛒 Ouvrir Mini-App",
+                web_app=WebAppInfo(url="https://white-inky.vercel.app/")
+            ),
+            InlineKeyboardButton(
+                "📢 Canal Telegram",
+                url="https://t.me/"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                "ℹ️ Information",
+                callback_data="info"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                "🥔 Canal Potato",
+                url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q"
+            ),
+            InlineKeyboardButton(
+                "✉️ Contact",
+                callback_data="contact"
+            )
+        ]
     ]
+
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await context.bot.send_photo(chat_id=chat_id, photo=image_url, caption=texte, reply_markup=reply_markup)
+    await context.bot.send_photo(
+        chat_id=chat_id,
+        photo=image_url,
+        caption=texte,
+        reply_markup=reply_markup
+    )
 
 # Gestion des boutons
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -42,7 +70,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     data = query.data
     chat_id = query.message.chat_id
 
-    # Images spécifiques pour chaque bouton
     image_info = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/info.jpg"
     image_contact = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/contact.jpg"
 
@@ -51,7 +78,11 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 Tout est indiqué 👆
 On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
-        await context.bot.send_photo(chat_id=chat_id, photo=image_info, caption=texte_info)
+        await context.bot.send_photo(
+            chat_id=chat_id,
+            photo=image_info,
+            caption=texte_info
+        )
 
     elif data == "contact":
         texte_contact = """✉️ CONTACT ✉️
@@ -59,9 +90,13 @@ On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
 📞 🔵 Telegram : @PanameDelivery
 
 📞 🟢 WhatsApp : +33759873968"""
-        await context.bot.send_photo(chat_id=chat_id, photo=image_contact, caption=texte_contact)
+        await context.bot.send_photo(
+            chat_id=chat_id,
+            photo=image_contact,
+            caption=texte_contact
+        )
 
-    await query.answer()  # confirme le clic
+    await query.answer()
 
 # Autres commandes
 async def bonjour(update: Update, context: ContextTypes.DEFAULT_TYPE):
