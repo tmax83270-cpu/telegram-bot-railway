@@ -29,8 +29,8 @@ CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO, VIDÉOS, MENU, ETC �
     keyboard = [
         [
             InlineKeyboardButton(
-                "ℹ️ Information",
-                callback_data="info"
+                "🥔 Canal Potato",
+                url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q"
             ),
             InlineKeyboardButton(
                 "📢 Canal Telegram",
@@ -44,9 +44,10 @@ CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO, VIDÉOS, MENU, ETC �
             )
         ],
         [
-            InlineKeyboardButton(
-                "🥔 Canal Potato",
-                url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q"
+            
+InlineKeyboardButton(
+                "ℹ️ Information",
+                callback_data="info"
             ),
             InlineKeyboardButton(
                 "✉️ Contact",
