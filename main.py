@@ -29,8 +29,8 @@ CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO, VIDÉOS, MENU, ETC �
     keyboard = [
         [
             InlineKeyboardButton(
-                "🛒 Ouvrir Mini-App",
-                web_app=WebAppInfo(url="https://white-inky.vercel.app/")
+                "ℹ️ Information",
+                callback_data="info"
             ),
             InlineKeyboardButton(
                 "📢 Canal Telegram",
@@ -39,8 +39,8 @@ CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO, VIDÉOS, MENU, ETC �
         ],
         [
             InlineKeyboardButton(
-                "ℹ️ Information",
-                callback_data="info"
+                "🛒 Ouvrir Mini-App",
+                web_app=WebAppInfo(url="https://white-inky.vercel.app/")
             )
         ],
         [
