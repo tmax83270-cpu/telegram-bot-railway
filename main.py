@@ -34,7 +34,7 @@ CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO, VIDÉOS, MENU, ETC �
             ),
             InlineKeyboardButton(
                 "📢 Canal Telegram",
-                url="https://t.me/"
+                url="https://t.me/+GKfz6FwT-hg5NGJk"
             )
         ],
         [
