@@ -6,7 +6,7 @@ import os
 # =========================
 # TOKEN BOT
 # =========================
-TOKEN = "TON_TOKEN_ICI"
+TOKEN = "8339532089:AAHnTZHjCtzTIqLcdEKXQO3mnz_d2FDBrEs"
 
 # =========================
 # ADMIN ID
