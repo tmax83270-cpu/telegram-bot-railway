@@ -200,6 +200,20 @@ async def aide(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/start\n/broadcast"
     )
 
+async def users(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    if update.effective_chat.id != ADMIN_ID:
+        return
+
+    users = load_users()
+
+    texte = "\n".join([str(user) for user in users])
+
+    if texte == "":
+        texte = "Aucun utilisateur"
+
+    await update.message.reply_text(texte)
+
 # =========================
 # HANDLERS
 # =========================
@@ -209,6 +223,7 @@ app_bot.add_handler(CommandHandler("bonjour", bonjour))
 app_bot.add_handler(CommandHandler("aide", aide))
 app_bot.add_handler(CommandHandler("broadcast", broadcast))
 app_bot.add_handler(CallbackQueryHandler(button_handler))
+app_bot.add_handler(CommandHandler("users", users))
 
 # =========================
 # START BOT
