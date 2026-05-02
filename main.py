@@ -95,25 +95,35 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await query.answer()
 
+    image_info = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/info.jpg"
+    image_contact = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/contact.jpg"
+
     if data == "info":
 
-        texte = """ℹ️ INFORMATIONS ℹ️
+        texte_info = """ℹ️ INFORMATIONS ℹ️
 
-🔹 Livraison rapide
-🔹 Zone IDF
-🔹 Service discret
-🔹 Disponible tous les jours"""
+Tout est indiqué 👆
+On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
 
-        await context.bot.send_message(chat_id=chat_id, text=texte)
+        await context.bot.send_photo(
+            chat_id=chat_id,
+            photo=image_info,
+            caption=texte_info
+        )
 
     elif data == "contact":
 
-        texte = """✉️ CONTACT ✉️
+        texte_contact = """✉️ CONTACT ✉️
 
-📞 Telegram : @PanameDelivery
-📞 WhatsApp : +33XXXXXXXXX"""
+📞 🔵 Telegram : @PanameDelivery
 
-        await context.bot.send_message(chat_id=chat_id, text=texte)
+📞 🟢 WhatsApp : +33759873968"""
+
+        await context.bot.send_photo(
+            chat_id=chat_id,
+            photo=image_contact,
+            caption=texte_contact
+        )
 
 # =========================
 # BROADCAST (ADMIN)
