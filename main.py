@@ -3,12 +3,13 @@ from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandle
 
 import json
 import os
+from datetime import datetime
 
 # =========================
 # CONFIG
 # =========================
 
-TOKEN = "8690669529:AAHf_mj2dydn7ermmjArgV9JFq49ZlOwKgk"
+TOKEN = "TON_TOKEN_ICI"
 ADMIN_ID = 7047054214
 USERS_FILE = "users.json"
 
@@ -34,11 +35,19 @@ def load_users():
 def save_user(user_id):
     users = load_users()
 
-    if user_id not in users:
-        users.append(user_id)
+    today = datetime.now().strftime("%Y-%m-%d")
 
-        with open(USERS_FILE, "w") as f:
-            json.dump(users, f)
+    for u in users:
+        if u["id"] == user_id:
+            return
+
+    users.append({
+        "id": user_id,
+        "date": today
+    })
+
+    with open(USERS_FILE, "w") as f:
+        json.dump(users, f)
 
 # =========================
 # START
@@ -83,14 +92,13 @@ CLIQUE SUR LA MINI APP 👇"""
     )
 
 # =========================
-# CALLBACK BUTTONS
+# BUTTONS
 # =========================
 
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     query = update.callback_query
     data = query.data
-    chat_id = query.message.chat_id
 
     await query.answer()
 
@@ -99,33 +107,98 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if data == "info":
 
-        texte_info = """ℹ️ INFORMATIONS ℹ️
+        texte = """ℹ️ INFORMATIONS ℹ️
 
 Tout est indiqué 👆
-On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
+On vous livre même dans toute l’IDF ✌️"""
 
         await context.bot.send_photo(
-            chat_id=chat_id,
+            chat_id=query.message.chat_id,
             photo=image_info,
-            caption=texte_info
+            caption=texte
         )
 
     elif data == "contact":
 
-        texte_contact = """✉️ CONTACT ✉️
+        texte = """✉️ CONTACT ✉️
 
-📞 🔵 Telegram : @PanameDelivery
-
-📞 🟢 WhatsApp : +33759873968"""
+📞 Telegram : @PanameDelivery
+📞 WhatsApp : +33759873968"""
 
         await context.bot.send_photo(
-            chat_id=chat_id,
+            chat_id=query.message.chat_id,
             photo=image_contact,
-            caption=texte_contact
+            caption=texte
         )
 
 # =========================
-# BROADCAST ADMIN
+# USERS LIST
+# =========================
+
+async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    if update.effective_chat.id != ADMIN_ID:
+        return
+
+    users = load_users()
+
+    if not users:
+        await update.message.reply_text("Aucun utilisateur")
+        return
+
+    text = "📋 LISTE USERS\n\n"
+
+    for u in users:
+
+        try:
+            chat = await context.bot.get_chat(u["id"])
+
+            name = chat.first_name if chat.first_name else "?"
+            username = f"@{chat.username}" if chat.username else "pas de username"
+
+            text += f"🆔 {u['id']} | {name} | {username}\n"
+
+        except:
+            text += f"🆔 {u['id']} | inaccessible\n"
+
+    await update.message.reply_text(text)
+
+# =========================
+# STATS USERS PAR JOUR
+# =========================
+
+async def stats_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    if update.effective_chat.id != ADMIN_ID:
+        return
+
+    users = load_users()
+
+    if not users:
+        await update.message.reply_text("Aucune donnée")
+        return
+
+    stats = {}
+
+    for u in users:
+        date = u.get("date", "inconnu")
+
+        if date not in stats:
+            stats[date] = 0
+
+        stats[date] += 1
+
+    text = "📊 STATS USERS PAR JOUR\n\n"
+
+    for date, count in sorted(stats.items()):
+        text += f"📅 {date} → {count} users\n"
+
+    text += f"\n👥 TOTAL : {len(users)}"
+
+    await update.message.reply_text(text)
+
+# =========================
+# BROADCAST
 # =========================
 
 async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -143,9 +216,9 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     sent = 0
 
-    for user_id in users:
+    for u in users:
         try:
-            await context.bot.send_message(chat_id=user_id, text=message)
+            await context.bot.send_message(chat_id=u["id"], text=message)
             sent += 1
         except:
             pass
@@ -153,44 +226,13 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"Envoyé à {sent} utilisateurs")
 
 # =========================
-# USERS LIST (AVEC NOM + USERNAME)
-# =========================
-
-async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    if update.effective_chat.id != ADMIN_ID:
-        return
-
-    users = load_users()
-
-    if not users:
-        await update.message.reply_text("Aucun utilisateur")
-        return
-
-    text = "📋 LISTE USERS\n\n"
-
-    for user_id in users:
-
-        try:
-            chat = await context.bot.get_chat(user_id)
-
-            name = chat.first_name if chat.first_name else "?"
-            username = f"@{chat.username}" if chat.username else "pas de username"
-
-            text += f"🆔 {user_id} | {name} | {username}\n"
-
-        except:
-            text += f"🆔 {user_id} | inaccessible\n"
-
-    await update.message.reply_text(text)
-
-# =========================
 # HANDLERS
 # =========================
 
 app_bot.add_handler(CommandHandler("start", start))
-app_bot.add_handler(CommandHandler("broadcast", broadcast))
 app_bot.add_handler(CommandHandler("users", users_cmd))
+app_bot.add_handler(CommandHandler("stats", stats_cmd))
+app_bot.add_handler(CommandHandler("broadcast", broadcast))
 app_bot.add_handler(CallbackQueryHandler(button_handler))
 
 # =========================
