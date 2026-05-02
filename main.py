@@ -34,7 +34,6 @@ def load_users():
 
 def save_user(user_id):
     users = load_users()
-
     today = datetime.now().strftime("%Y-%m-%d")
 
     for u in users:
@@ -59,12 +58,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     save_user(chat_id)
 
     texte = """BIENVENUE SUR PANAME DELIVERY 🗼✨
-(Anciennement White Coffee 75)
 
-🔹 Zone : Paris & Île De France 
-🔹 Horaires : 14h/02h – 7j/7
+🔹 Zone : Paris & IDF
+🔹 Horaires : 14h/02h
 🔹 Paiement : Cash uniquement
-🔹 Livraison & Meet-up : Rapide et discret
 
 CLIQUE SUR LA MINI APP 👇"""
 
@@ -72,14 +69,14 @@ CLIQUE SUR LA MINI APP 👇"""
 
     keyboard = [
         [
-            InlineKeyboardButton("🥔 Canal Potato", url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q"),
-            InlineKeyboardButton("📢 Telegram", url="https://t.me/+GKfz6FwT-hg5NGJk")
+            InlineKeyboardButton("📢 Telegram", url="https://t.me/+GKfz6FwT-hg5NGJk"),
+            InlineKeyboardButton("🥔 Canal", url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q")
         ],
         [
-            InlineKeyboardButton("🛒 Ouvrir Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))
+            InlineKeyboardButton("🛒 Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))
         ],
         [
-            InlineKeyboardButton("ℹ️ Information", callback_data="info"),
+            InlineKeyboardButton("ℹ️ Info", callback_data="info"),
             InlineKeyboardButton("✉️ Contact", callback_data="contact")
         ]
     ]
@@ -92,44 +89,29 @@ CLIQUE SUR LA MINI APP 👇"""
     )
 
 # =========================
-# BUTTONS
+# ADMIN DASHBOARD
 # =========================
 
-async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def admin_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    query = update.callback_query
-    data = query.data
+    if update.effective_chat.id != ADMIN_ID:
+        return
 
-    await query.answer()
+    keyboard = [
+        [
+            InlineKeyboardButton("📊 Stats", callback_data="admin_stats"),
+            InlineKeyboardButton("👥 Users", callback_data="admin_users")
+        ],
+        [
+            InlineKeyboardButton("📣 Broadcast", callback_data="admin_broadcast"),
+            InlineKeyboardButton("🔄 Refresh", callback_data="admin_refresh")
+        ]
+    ]
 
-    image_info = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/info.jpg"
-    image_contact = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/contact.jpg"
-
-    if data == "info":
-
-        texte = """ℹ️ INFORMATIONS ℹ️
-
-Tout est indiqué 👆
-On vous livre même dans toute l’IDF ✌️"""
-
-        await context.bot.send_photo(
-            chat_id=query.message.chat_id,
-            photo=image_info,
-            caption=texte
-        )
-
-    elif data == "contact":
-
-        texte = """✉️ CONTACT ✉️
-
-📞 Telegram : @PanameDelivery
-📞 WhatsApp : +33759873968"""
-
-        await context.bot.send_photo(
-            chat_id=query.message.chat_id,
-            photo=image_contact,
-            caption=texte
-        )
+    await update.message.reply_text(
+        "🎛️ ADMIN DASHBOARD",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
 
 # =========================
 # USERS LIST
@@ -142,19 +124,13 @@ async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     users = load_users()
 
-    if not users:
-        await update.message.reply_text("Aucun utilisateur")
-        return
-
-    text = "📋 LISTE USERS\n\n"
+    text = "👥 USERS\n\n"
 
     for u in users:
-
         try:
             chat = await context.bot.get_chat(u["id"])
-
-            name = chat.first_name if chat.first_name else "?"
-            username = f"@{chat.username}" if chat.username else "pas de username"
+            name = chat.first_name or "?"
+            username = f"@{chat.username}" if chat.username else "no username"
 
             text += f"🆔 {u['id']} | {name} | {username}\n"
 
@@ -164,7 +140,7 @@ async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(text)
 
 # =========================
-# STATS USERS PAR JOUR
+# STATS
 # =========================
 
 async def stats_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -174,26 +150,18 @@ async def stats_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     users = load_users()
 
-    if not users:
-        await update.message.reply_text("Aucune donnée")
-        return
-
     stats = {}
 
     for u in users:
         date = u.get("date", "inconnu")
+        stats[date] = stats.get(date, 0) + 1
 
-        if date not in stats:
-            stats[date] = 0
-
-        stats[date] += 1
-
-    text = "📊 STATS USERS PAR JOUR\n\n"
+    text = "📊 STATS\n\n"
 
     for date, count in sorted(stats.items()):
-        text += f"📅 {date} → {count} users\n"
+        text += f"📅 {date} → {count}\n"
 
-    text += f"\n👥 TOTAL : {len(users)}"
+    text += f"\nTOTAL : {len(users)}"
 
     await update.message.reply_text(text)
 
@@ -223,13 +191,43 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
         except:
             pass
 
-    await update.message.reply_text(f"Envoyé à {sent} utilisateurs")
+    await update.message.reply_text(f"Envoyé à {sent} users")
+
+# =========================
+# CALLBACK ROUTER
+# =========================
+
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    query = update.callback_query
+    data = query.data
+
+    await query.answer()
+
+    if data == "info":
+        await query.message.reply_text("ℹ️ Info dispo ici")
+
+    elif data == "contact":
+        await query.message.reply_text("✉️ Contact dispo ici")
+
+    elif data == "admin_stats":
+        await stats_cmd(update, context)
+
+    elif data == "admin_users":
+        await users_cmd(update, context)
+
+    elif data == "admin_broadcast":
+        await query.message.reply_text("Utilise /broadcast message")
+
+    elif data == "admin_refresh":
+        await admin_panel(update, context)
 
 # =========================
 # HANDLERS
 # =========================
 
 app_bot.add_handler(CommandHandler("start", start))
+app_bot.add_handler(CommandHandler("admin", admin_panel))
 app_bot.add_handler(CommandHandler("users", users_cmd))
 app_bot.add_handler(CommandHandler("stats", stats_cmd))
 app_bot.add_handler(CommandHandler("broadcast", broadcast))
