@@ -1,31 +1,75 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+    ContextTypes,
+    CallbackQueryHandler
+)
 
-# Ton token Telegram
-TOKEN = "8339532089:AAHnTZHjCtzTIqLcdEKXQO3mnz_d2FDBrEs"
+import json
+import os
 
-# Création du bot
+# =========================
+# CONFIG
+# =========================
+
+TOKEN = "TON_NOUVEAU_TOKEN"
+
+# TON ID TELEGRAM
+ADMIN_ID = 123456789
+
+USERS_FILE = "users.json"
+
+# =========================
+# BOT
+# =========================
+
 app_bot = ApplicationBuilder().token(TOKEN).build()
 
-# Commande /start
+# =========================
+# SAUVEGARDE USERS
+# =========================
+
+def load_users():
+    if not os.path.exists(USERS_FILE):
+        return []
+
+    with open(USERS_FILE, "r") as f:
+        return json.load(f)
+
+def save_user(user_id):
+    users = load_users()
+
+    if user_id not in users:
+        users.append(user_id)
+
+        with open(USERS_FILE, "w") as f:
+            json.dump(users, f)
+
+# =========================
+# START
+# =========================
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     chat_id = update.effective_chat.id
-    
+
+    # SAUVEGARDE USER
+    save_user(chat_id)
+
     texte = """BIENVENUE SUR LE BOT DE PANAME DELIVERY 🗼✨
 (Anciennement White Coffee 75)
 
-🔹 Zone : Paris & Île De France 
+🔹 Zone : Paris & Île De France
 🔹 Horaires : 14h/02h – 7j/7
 🔹 Paiement : Cash uniquement
 🔹 Livraison & Meet-up : Rapide et discret
 
-CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO, VIDÉOS, MENU, ETC 👇
-
-/start pour démarrer ou redémarrer le bot 🤖"""
+CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO 👇
+"""
 
     image_url = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/panamedelivery.jpg"
 
-    # 🔹 NOUVELLE DISPOSITION DES BOUTONS
     keyboard = [
         [
             InlineKeyboardButton(
@@ -44,8 +88,7 @@ CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO, VIDÉOS, MENU, ETC �
             )
         ],
         [
-            
-InlineKeyboardButton(
+            InlineKeyboardButton(
                 "ℹ️ Information",
                 callback_data="info"
             ),
@@ -65,8 +108,12 @@ InlineKeyboardButton(
         reply_markup=reply_markup
     )
 
-# Gestion des boutons
+# =========================
+# BOUTONS
+# =========================
+
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     query = update.callback_query
     data = query.data
     chat_id = query.message.chat_id
@@ -75,10 +122,12 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     image_contact = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/contact.jpg"
 
     if data == "info":
+
         texte_info = """ℹ️ INFORMATIONS ℹ️
 
 Tout est indiqué 👆
-On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
+"""
+
         await context.bot.send_photo(
             chat_id=chat_id,
             photo=image_info,
@@ -86,11 +135,13 @@ On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
         )
 
     elif data == "contact":
+
         texte_contact = """✉️ CONTACT ✉️
 
-📞 🔵 Telegram : @PanameDelivery
+📞 Telegram : @PanameDelivery
+📞 WhatsApp : +33759873968
+"""
 
-📞 🟢 WhatsApp : +33759873968"""
         await context.bot.send_photo(
             chat_id=chat_id,
             photo=image_contact,
@@ -99,18 +150,69 @@ On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
 
     await query.answer()
 
-# Autres commandes
+# =========================
+# BROADCAST
+# =========================
+
+async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    # Vérifie admin
+    if update.effective_chat.id != ADMIN_ID:
+        return
+
+    # Vérifie message
+    if not context.args:
+        await update.message.reply_text(
+            "Utilisation : /broadcast ton message"
+        )
+        return
+
+    message = " ".join(context.args)
+
+    users = load_users()
+
+    sent = 0
+
+    for user_id in users:
+        try:
+            await context.bot.send_message(
+                chat_id=user_id,
+                text=message
+            )
+            sent += 1
+
+        except:
+            pass
+
+    await update.message.reply_text(
+        f"Message envoyé à {sent} utilisateurs."
+    )
+
+# =========================
+# AUTRES COMMANDES
+# =========================
+
 async def bonjour(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Bonjour ! 😄")
+    await update.message.reply_text("Bonjour 😄")
 
 async def aide(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Commandes : /start, /bonjour, /aide")
+    await update.message.reply_text(
+        "/start\n/broadcast"
+    )
 
-# Ajout des handlers
+# =========================
+# HANDLERS
+# =========================
+
 app_bot.add_handler(CommandHandler("start", start))
 app_bot.add_handler(CommandHandler("bonjour", bonjour))
 app_bot.add_handler(CommandHandler("aide", aide))
+app_bot.add_handler(CommandHandler("broadcast", broadcast))
 app_bot.add_handler(CallbackQueryHandler(button_handler))
 
-print("Bot Telegram en ligne…")
+# =========================
+# START BOT
+# =========================
+
+print("Bot Telegram en ligne...")
 app_bot.run_polling()
