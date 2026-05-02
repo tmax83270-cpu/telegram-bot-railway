@@ -9,7 +9,7 @@ from datetime import datetime
 # CONFIG
 # =========================
 
-TOKEN = "8690669529:AAHf_mj2dydn7ermmjArgV9JFq49ZlOwKgk"
+TOKEN = "TON_TOKEN_ICI"
 ADMIN_ID = 7047054214
 USERS_FILE = "users.json"
 
@@ -49,7 +49,7 @@ def save_user(user_id):
         json.dump(users, f)
 
 # =========================
-# START
+# START (TON DESIGN ORIGINAL)
 # =========================
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -58,25 +58,27 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     save_user(chat_id)
 
     texte = """BIENVENUE SUR PANAME DELIVERY 🗼✨
+(Anciennement White Coffee 75)
 
-🔹 Zone : Paris & IDF
-🔹 Horaires : 14h/02h
+🔹 Zone : Paris & Île De France 
+🔹 Horaires : 14h/02h – 7j/7
 🔹 Paiement : Cash uniquement
+🔹 Livraison & Meet-up : Rapide et discret
 
-CLIQUE SUR LA MINI APP 👇"""
+CLIQUE SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO 👇"""
 
     image_url = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/panamedelivery.jpg"
 
     keyboard = [
         [
-            InlineKeyboardButton("📢 Telegram", url="https://t.me/+GKfz6FwT-hg5NGJk"),
-            InlineKeyboardButton("🥔 Canal", url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q")
+            InlineKeyboardButton("🥔 Canal Potato", url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q"),
+            InlineKeyboardButton("📢 Canal Telegram", url="https://t.me/+GKfz6FwT-hg5NGJk")
         ],
         [
-            InlineKeyboardButton("🛒 Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))
+            InlineKeyboardButton("🛒 Ouvrir Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))
         ],
         [
-            InlineKeyboardButton("ℹ️ Info", callback_data="info"),
+            InlineKeyboardButton("ℹ️ Information", callback_data="info"),
             InlineKeyboardButton("✉️ Contact", callback_data="contact")
         ]
     ]
@@ -114,7 +116,7 @@ async def admin_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 # =========================
-# USERS (COMMAND)
+# USERS LIST (COMMAND)
 # =========================
 
 async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -167,68 +169,7 @@ async def stats_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(text)
 
 # =========================
-# CALLBACK SAFE FUNCTIONS
-# =========================
-
-async def send_stats(query, context):
-
-    users = load_users()
-
-    stats = {}
-
-    for u in users:
-        date = u.get("date", "inconnu")
-        stats[date] = stats.get(date, 0) + 1
-
-    text = "📊 STATS\n\n"
-
-    for date, count in sorted(stats.items()):
-        text += f"📅 {date} → {count}\n"
-
-    text += f"\nTOTAL : {len(users)}"
-
-    await query.message.reply_text(text)
-
-async def send_users(query, context):
-
-    users = load_users()
-
-    text = "👥 USERS\n\n"
-
-    for u in users:
-        try:
-            chat = await context.bot.get_chat(u["id"])
-
-            name = chat.first_name or "?"
-            username = f"@{chat.username}" if chat.username else "no username"
-
-            text += f"🆔 {u['id']} | {name} | {username}\n"
-
-        except:
-            text += f"🆔 {u['id']} | inaccessible\n"
-
-    await query.message.reply_text(text)
-
-async def refresh_dashboard(query):
-
-    keyboard = [
-        [
-            InlineKeyboardButton("📊 Stats", callback_data="admin_stats"),
-            InlineKeyboardButton("👥 Users", callback_data="admin_users")
-        ],
-        [
-            InlineKeyboardButton("📣 Broadcast", callback_data="admin_broadcast"),
-            InlineKeyboardButton("🔄 Refresh", callback_data="admin_refresh")
-        ]
-    ]
-
-    await query.message.reply_text(
-        "🎛️ ADMIN DASHBOARD",
-        reply_markup=InlineKeyboardMarkup(keyboard)
-    )
-
-# =========================
-# CALLBACK ROUTER FIXED
+# CALLBACK (FIXED + TON DESIGN RESTAURÉ)
 # =========================
 
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -238,25 +179,60 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await query.answer()
 
-    # USER SIDE
+    # =========================
+    # TON INFO ORIGINAL
+    # =========================
+
     if data == "info":
-        await query.message.reply_text("ℹ️ Informations disponibles")
+
+        image_info = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/info.jpg"
+
+        texte_info = """ℹ️ INFORMATIONS ℹ️
+
+Tout est indiqué 👆
+On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
+
+        await context.bot.send_photo(
+            chat_id=query.message.chat_id,
+            photo=image_info,
+            caption=texte_info
+        )
+
+    # =========================
+    # TON CONTACT ORIGINAL
+    # =========================
 
     elif data == "contact":
-        await query.message.reply_text("✉️ Contact disponible")
 
-    # ADMIN DASHBOARD
+        image_contact = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/contact.jpg"
+
+        texte_contact = """✉️ CONTACT ✉️
+
+📞 🔵 Telegram : @PanameDelivery
+
+📞 🟢 WhatsApp : +33759873968"""
+
+        await context.bot.send_photo(
+            chat_id=query.message.chat_id,
+            photo=image_contact,
+            caption=texte_contact
+        )
+
+    # =========================
+    # DASHBOARD ADMIN
+    # =========================
+
     elif data == "admin_stats":
-        await send_stats(query, context)
+        await stats_cmd(update, context)
 
     elif data == "admin_users":
-        await send_users(query, context)
+        await users_cmd(update, context)
 
     elif data == "admin_broadcast":
         await query.message.reply_text("Utilise /broadcast message")
 
     elif data == "admin_refresh":
-        await refresh_dashboard(query)
+        await admin_panel(update, context)
 
 # =========================
 # BROADCAST
