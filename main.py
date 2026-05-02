@@ -144,6 +144,24 @@ async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(text)
 
+# juste après start / broadcast / users_cmd
+
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    query = update.callback_query
+    data = query.data
+    chat_id = query.message.chat_id
+
+    await query.answer()
+
+    if data == "info":
+        texte = "ℹ️ INFORMATIONS ℹ️\n\nTout est indiqué 👆"
+        await context.bot.send_message(chat_id=chat_id, text=texte)
+
+    elif data == "contact":
+        texte = "✉️ CONTACT ✉️\n\nTelegram : @PanameDelivery"
+        await context.bot.send_message(chat_id=chat_id, text=texte)
+
 # =========================
 # HANDLERS
 # =========================
@@ -151,6 +169,7 @@ async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 app_bot.add_handler(CommandHandler("start", start))
 app_bot.add_handler(CommandHandler("broadcast", broadcast))
 app_bot.add_handler(CommandHandler("users", users_cmd))
+app_bot.add_handler(CallbackQueryHandler(button_handler))
 
 # =========================
 # RUN
