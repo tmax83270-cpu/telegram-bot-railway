@@ -16,7 +16,7 @@ import os
 TOKEN = "8690669529:AAHf_mj2dydn7ermmjArgV9JFq49ZlOwKgk"
 
 # TON ID TELEGRAM
-ADMIN_ID = 123456789
+ADMIN_ID = 7047054214
 
 USERS_FILE = "users.json"
 
