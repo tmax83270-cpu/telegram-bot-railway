@@ -31,14 +31,22 @@ def load_users():
     except:
         return []
 
-def save_user(user_id):
+def save_user(user):
     users = load_users()
 
-    if user_id not in users:
-        users.append(user_id)
+    user_data = {
+        "id": user.id,
+        "username": user.username
+    }
 
-        with open(USERS_FILE, "w") as f:
-            json.dump(users, f)
+    for u in users:
+        if isinstance(u, dict) and u.get("id") == user.id:
+            return
+
+    users.append(user_data)
+
+    with open(USERS_FILE, "w") as f:
+        json.dump(users, f, indent=2)
 
 # =========================
 # START
@@ -168,10 +176,16 @@ async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Aucun utilisateur")
         return
 
-    text = "LISTE USERS :\n\n"
+    text = "📋 LISTE USERS\n\n"
 
     for u in users:
-        text += f"{u}\n"
+        user_id = u.get("id", "N/A")
+        username = u.get("username")
+
+        if username:
+            text += f"🆔 {user_id} | @{username}\n"
+        else:
+            text += f"🆔 {user_id} | (pas de username)\n"
 
     await update.message.reply_text(text)
 
