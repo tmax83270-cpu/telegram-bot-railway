@@ -114,7 +114,7 @@ async def admin_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 # =========================
-# USERS LIST
+# USERS (COMMAND)
 # =========================
 
 async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -129,6 +129,7 @@ async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for u in users:
         try:
             chat = await context.bot.get_chat(u["id"])
+
             name = chat.first_name or "?"
             username = f"@{chat.username}" if chat.username else "no username"
 
@@ -140,7 +141,7 @@ async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(text)
 
 # =========================
-# STATS
+# STATS (COMMAND)
 # =========================
 
 async def stats_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -164,6 +165,98 @@ async def stats_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text += f"\nTOTAL : {len(users)}"
 
     await update.message.reply_text(text)
+
+# =========================
+# CALLBACK SAFE FUNCTIONS
+# =========================
+
+async def send_stats(query, context):
+
+    users = load_users()
+
+    stats = {}
+
+    for u in users:
+        date = u.get("date", "inconnu")
+        stats[date] = stats.get(date, 0) + 1
+
+    text = "📊 STATS\n\n"
+
+    for date, count in sorted(stats.items()):
+        text += f"📅 {date} → {count}\n"
+
+    text += f"\nTOTAL : {len(users)}"
+
+    await query.message.reply_text(text)
+
+async def send_users(query, context):
+
+    users = load_users()
+
+    text = "👥 USERS\n\n"
+
+    for u in users:
+        try:
+            chat = await context.bot.get_chat(u["id"])
+
+            name = chat.first_name or "?"
+            username = f"@{chat.username}" if chat.username else "no username"
+
+            text += f"🆔 {u['id']} | {name} | {username}\n"
+
+        except:
+            text += f"🆔 {u['id']} | inaccessible\n"
+
+    await query.message.reply_text(text)
+
+async def refresh_dashboard(query):
+
+    keyboard = [
+        [
+            InlineKeyboardButton("📊 Stats", callback_data="admin_stats"),
+            InlineKeyboardButton("👥 Users", callback_data="admin_users")
+        ],
+        [
+            InlineKeyboardButton("📣 Broadcast", callback_data="admin_broadcast"),
+            InlineKeyboardButton("🔄 Refresh", callback_data="admin_refresh")
+        ]
+    ]
+
+    await query.message.reply_text(
+        "🎛️ ADMIN DASHBOARD",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+
+# =========================
+# CALLBACK ROUTER FIXED
+# =========================
+
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    query = update.callback_query
+    data = query.data
+
+    await query.answer()
+
+    # USER SIDE
+    if data == "info":
+        await query.message.reply_text("ℹ️ Informations disponibles")
+
+    elif data == "contact":
+        await query.message.reply_text("✉️ Contact disponible")
+
+    # ADMIN DASHBOARD
+    elif data == "admin_stats":
+        await send_stats(query, context)
+
+    elif data == "admin_users":
+        await send_users(query, context)
+
+    elif data == "admin_broadcast":
+        await query.message.reply_text("Utilise /broadcast message")
+
+    elif data == "admin_refresh":
+        await refresh_dashboard(query)
 
 # =========================
 # BROADCAST
@@ -192,35 +285,6 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
             pass
 
     await update.message.reply_text(f"Envoyé à {sent} users")
-
-# =========================
-# CALLBACK ROUTER
-# =========================
-
-async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    query = update.callback_query
-    data = query.data
-
-    await query.answer()
-
-    if data == "info":
-        await query.message.reply_text("ℹ️ Info dispo ici")
-
-    elif data == "contact":
-        await query.message.reply_text("✉️ Contact dispo ici")
-
-    elif data == "admin_stats":
-        await stats_cmd(update, context)
-
-    elif data == "admin_users":
-        await users_cmd(update, context)
-
-    elif data == "admin_broadcast":
-        await query.message.reply_text("Utilise /broadcast message")
-
-    elif data == "admin_refresh":
-        await admin_panel(update, context)
 
 # =========================
 # HANDLERS
