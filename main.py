@@ -10,24 +10,26 @@ import os
 
 TOKEN = "8690669529:AAHf_mj2dydn7ermmjArgV9JFq49ZlOwKgk"
 ADMIN_ID = 7047054214
-
 USERS_FILE = "users.json"
 
 # =========================
-# BOT INIT
+# BOT
 # =========================
 
 app_bot = ApplicationBuilder().token(TOKEN).build()
 
 # =========================
-# USERS SYSTEM
+# USERS SYSTEM SAFE
 # =========================
 
 def load_users():
-    if not os.path.exists(USERS_FILE):
+    try:
+        if not os.path.exists(USERS_FILE):
+            return []
+        with open(USERS_FILE, "r") as f:
+            return json.load(f)
+    except:
         return []
-    with open(USERS_FILE, "r") as f:
-        return json.load(f)
 
 def save_user(user_id):
     users = load_users()
@@ -38,7 +40,7 @@ def save_user(user_id):
             json.dump(users, f)
 
 # =========================
-# START
+# START (AVEC IMAGES + BOUTONS)
 # =========================
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -48,27 +50,52 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # save user
     save_user(chat_id)
 
-    texte = """BIENVENUE SUR PANAME DELIVERY 🗼
+    texte = """BIENVENUE SUR LE BOT DE PANAME DELIVERY 🗼✨
+(Anciennement White Coffee 75)
 
-Accède à la mini app ci-dessous 👇"""
+🔹 Zone : Paris & Île De France 
+🔹 Horaires : 14h/02h – 7j/7
+🔹 Paiement : Cash uniquement
+🔹 Livraison & Meet-up : Rapide et discret
+
+CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS 👇"""
+
+    image_url = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/panamedelivery.jpg"
 
     keyboard = [
+        [
+            InlineKeyboardButton(
+                "🥔 Canal Potato",
+                url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q"
+            ),
+            InlineKeyboardButton(
+                "📢 Canal Telegram",
+                url="https://t.me/+GKfz6FwT-hg5NGJk"
+            )
+        ],
         [
             InlineKeyboardButton(
                 "🛒 Ouvrir Mini-App",
                 web_app=WebAppInfo(url="https://white-inky.vercel.app/")
             )
+        ],
+        [
+            InlineKeyboardButton("ℹ️ Information", callback_data="info"),
+            InlineKeyboardButton("✉️ Contact", callback_data="contact")
         ]
     ]
 
-    await context.bot.send_message(
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await context.bot.send_photo(
         chat_id=chat_id,
-        text=texte,
-        reply_markup=InlineKeyboardMarkup(keyboard)
+        photo=image_url,
+        caption=texte,
+        reply_markup=reply_markup
     )
 
 # =========================
-# BROADCAST (ADMIN ONLY)
+# BROADCAST
 # =========================
 
 async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -96,7 +123,7 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"Envoyé à {sent} utilisateurs")
 
 # =========================
-# USERS LIST (ADMIN ONLY)
+# USERS LIST
 # =========================
 
 async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -110,7 +137,7 @@ async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Aucun utilisateur")
         return
 
-    text = "LISTE DES USERS :\n\n"
+    text = "LISTE USERS :\n\n"
 
     for u in users:
         text += f"{u}\n"
@@ -126,7 +153,7 @@ app_bot.add_handler(CommandHandler("broadcast", broadcast))
 app_bot.add_handler(CommandHandler("users", users_cmd))
 
 # =========================
-# START BOT
+# RUN
 # =========================
 
 print("Bot en ligne...")
