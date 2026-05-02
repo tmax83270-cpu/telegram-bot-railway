@@ -1,5 +1,5 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 
 import json
 import os
@@ -13,7 +13,7 @@ ADMIN_ID = 7047054214
 USERS_FILE = "users.json"
 
 # =========================
-# BOT
+# BOT INIT
 # =========================
 
 app_bot = ApplicationBuilder().token(TOKEN).build()
@@ -36,21 +36,21 @@ def save_user(user_id):
 
     if user_id not in users:
         users.append(user_id)
+
         with open(USERS_FILE, "w") as f:
             json.dump(users, f)
 
 # =========================
-# START (AVEC IMAGES + BOUTONS)
+# START
 # =========================
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     chat_id = update.effective_chat.id
 
-    # save user
     save_user(chat_id)
 
-    texte = """BIENVENUE SUR LE BOT DE PANAME DELIVERY 🗼✨
+    texte = """BIENVENUE SUR PANAME DELIVERY 🗼✨
 (Anciennement White Coffee 75)
 
 🔹 Zone : Paris & Île De France 
@@ -58,26 +58,17 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 🔹 Paiement : Cash uniquement
 🔹 Livraison & Meet-up : Rapide et discret
 
-CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS 👇"""
+CLIQUE SUR LA MINI APP 👇"""
 
     image_url = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/panamedelivery.jpg"
 
     keyboard = [
         [
-            InlineKeyboardButton(
-                "🥔 Canal Potato",
-                url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q"
-            ),
-            InlineKeyboardButton(
-                "📢 Canal Telegram",
-                url="https://t.me/+GKfz6FwT-hg5NGJk"
-            )
+            InlineKeyboardButton("🥔 Canal Potato", url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q"),
+            InlineKeyboardButton("📢 Telegram", url="https://t.me/+GKfz6FwT-hg5NGJk")
         ],
         [
-            InlineKeyboardButton(
-                "🛒 Ouvrir Mini-App",
-                web_app=WebAppInfo(url="https://white-inky.vercel.app/")
-            )
+            InlineKeyboardButton("🛒 Ouvrir Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))
         ],
         [
             InlineKeyboardButton("ℹ️ Information", callback_data="info"),
@@ -85,17 +76,47 @@ CLIQUEZ SUR LA MINI APP POUR ACCÉDER AUX PRODUITS 👇"""
         ]
     ]
 
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
     await context.bot.send_photo(
         chat_id=chat_id,
         photo=image_url,
         caption=texte,
-        reply_markup=reply_markup
+        reply_markup=InlineKeyboardMarkup(keyboard)
     )
 
 # =========================
-# BROADCAST
+# BUTTONS CALLBACK
+# =========================
+
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    query = update.callback_query
+    data = query.data
+    chat_id = query.message.chat_id
+
+    await query.answer()
+
+    if data == "info":
+
+        texte = """ℹ️ INFORMATIONS ℹ️
+
+🔹 Livraison rapide
+🔹 Zone IDF
+🔹 Service discret
+🔹 Disponible tous les jours"""
+
+        await context.bot.send_message(chat_id=chat_id, text=texte)
+
+    elif data == "contact":
+
+        texte = """✉️ CONTACT ✉️
+
+📞 Telegram : @PanameDelivery
+📞 WhatsApp : +33XXXXXXXXX"""
+
+        await context.bot.send_message(chat_id=chat_id, text=texte)
+
+# =========================
+# BROADCAST (ADMIN)
 # =========================
 
 async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -123,7 +144,7 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"Envoyé à {sent} utilisateurs")
 
 # =========================
-# USERS LIST
+# USERS LIST (ADMIN)
 # =========================
 
 async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -143,24 +164,6 @@ async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text += f"{u}\n"
 
     await update.message.reply_text(text)
-
-# juste après start / broadcast / users_cmd
-
-async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    query = update.callback_query
-    data = query.data
-    chat_id = query.message.chat_id
-
-    await query.answer()
-
-    if data == "info":
-        texte = "ℹ️ INFORMATIONS ℹ️\n\nTout est indiqué 👆"
-        await context.bot.send_message(chat_id=chat_id, text=texte)
-
-    elif data == "contact":
-        texte = "✉️ CONTACT ✉️\n\nTelegram : @PanameDelivery"
-        await context.bot.send_message(chat_id=chat_id, text=texte)
 
 # =========================
 # HANDLERS
