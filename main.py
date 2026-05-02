@@ -9,12 +9,12 @@ from datetime import datetime
 # CONFIG
 # =========================
 
-TOKEN = "8690669529:AAHf_mj2dydn7ermmjArgV9JFq49ZlOwKgk"
+TOKEN = "TON_TOKEN_ICI"
 ADMIN_ID = 7047054214
 USERS_FILE = "users.json"
 
 # =========================
-# BOT INIT
+# INIT BOT
 # =========================
 
 app_bot = ApplicationBuilder().token(TOKEN).build()
@@ -24,9 +24,9 @@ app_bot = ApplicationBuilder().token(TOKEN).build()
 # =========================
 
 def load_users():
+    if not os.path.exists(USERS_FILE):
+        return []
     try:
-        if not os.path.exists(USERS_FILE):
-            return []
         with open(USERS_FILE, "r") as f:
             return json.load(f)
     except:
@@ -65,17 +65,17 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 🔹 Paiement : Cash uniquement
 🔹 Livraison & Meet-up : Rapide et discret
 
-CLIQUE SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO 👇"""
+CLIQUE SUR LA MINI APP 👇"""
 
     image_url = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/panamedelivery.jpg"
 
     keyboard = [
         [
             InlineKeyboardButton("🥔 Canal Potato", url="https://ptdym150.org/joinchat/KvW1uaqXsqcevh_qI-BH8Q"),
-            InlineKeyboardButton("📢 Canal Telegram", url="https://t.me/+GKfz6FwT-hg5NGJk")
+            InlineKeyboardButton("📢 Telegram", url="https://t.me/+GKfz6FwT-hg5NGJk")
         ],
         [
-            InlineKeyboardButton("🛒 Ouvrir Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))
+            InlineKeyboardButton("🛒 Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))
         ],
         [
             InlineKeyboardButton("ℹ️ Information", callback_data="info"),
@@ -91,7 +91,7 @@ CLIQUE SUR LA MINI APP POUR ACCÉDER AUX PRODUITS DISPO 👇"""
     )
 
 # =========================
-# ADMIN DASHBOARD
+# ADMIN PANEL
 # =========================
 
 async def admin_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -116,13 +116,32 @@ async def admin_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 # =========================
-# USERS LIST (COMMAND)
+# CALLBACK FUNCTIONS FIXED
 # =========================
 
-async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def send_stats(query, context):
 
-    if update.effective_chat.id != ADMIN_ID:
-        return
+    users = load_users()
+
+    stats = {}
+
+    for u in users:
+        date = u.get("date", "inconnu")
+        stats[date] = stats.get(date, 0) + 1
+
+    text = "📊 STATS\n\n"
+
+    for date, count in sorted(stats.items()):
+        text += f"📅 {date} → {count}\n"
+
+    text += f"\nTOTAL : {len(users)}"
+
+    await context.bot.send_message(
+        chat_id=query.message.chat_id,
+        text=text
+    )
+
+async def send_users(query, context):
 
     users = load_users()
 
@@ -140,36 +159,13 @@ async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         except:
             text += f"🆔 {u['id']} | inaccessible\n"
 
-    await update.message.reply_text(text)
+    await context.bot.send_message(
+        chat_id=query.message.chat_id,
+        text=text
+    )
 
 # =========================
-# STATS (COMMAND)
-# =========================
-
-async def stats_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    if update.effective_chat.id != ADMIN_ID:
-        return
-
-    users = load_users()
-
-    stats = {}
-
-    for u in users:
-        date = u.get("date", "inconnu")
-        stats[date] = stats.get(date, 0) + 1
-
-    text = "📊 STATS\n\n"
-
-    for date, count in sorted(stats.items()):
-        text += f"📅 {date} → {count}\n"
-
-    text += f"\nTOTAL : {len(users)}"
-
-    await update.message.reply_text(text)
-
-# =========================
-# CALLBACK (FIXED + TON DESIGN RESTAURÉ)
+# CALLBACK ROUTER
 # =========================
 
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -179,10 +175,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await query.answer()
 
-    # =========================
-    # TON INFO ORIGINAL
-    # =========================
-
+    # USER SIDE
     if data == "info":
 
         image_info = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/info.jpg"
@@ -197,10 +190,6 @@ On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
             photo=image_info,
             caption=texte_info
         )
-
-    # =========================
-    # TON CONTACT ORIGINAL
-    # =========================
 
     elif data == "contact":
 
@@ -218,18 +207,18 @@ On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
             caption=texte_contact
         )
 
-    # =========================
-    # DASHBOARD ADMIN
-    # =========================
-
+    # ADMIN FIXED
     elif data == "admin_stats":
-        await stats_cmd(update, context)
+        await send_stats(query, context)
 
     elif data == "admin_users":
-        await users_cmd(update, context)
+        await send_users(query, context)
 
     elif data == "admin_broadcast":
-        await query.message.reply_text("Utilise /broadcast message")
+        await context.bot.send_message(
+            chat_id=query.message.chat_id,
+            text="Utilise /broadcast message"
+        )
 
     elif data == "admin_refresh":
         await admin_panel(update, context)
@@ -268,8 +257,6 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 app_bot.add_handler(CommandHandler("start", start))
 app_bot.add_handler(CommandHandler("admin", admin_panel))
-app_bot.add_handler(CommandHandler("users", users_cmd))
-app_bot.add_handler(CommandHandler("stats", stats_cmd))
 app_bot.add_handler(CommandHandler("broadcast", broadcast))
 app_bot.add_handler(CallbackQueryHandler(button_handler))
 
