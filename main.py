@@ -65,7 +65,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 🔹 Paiement : Cash uniquement
 🔹 Livraison & Meet-up : Rapide et discret
 
-CLIQUE SUR LA MINI APP 👇"""
+CLIQUE SUR LA MINI APP POUR AVOIR ACCES AU MENU, INFOS, PROMO ETC  👇👇
+
+/start pour redemarrer le bot 🤖"""
 
     image_url = "https://raw.githubusercontent.com/tmax83270-cpu/telegram-bot-railway/main/panamedelivery.jpg"
 
