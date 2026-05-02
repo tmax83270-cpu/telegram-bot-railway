@@ -19,7 +19,7 @@ USERS_FILE = "users.json"
 app_bot = ApplicationBuilder().token(TOKEN).build()
 
 # =========================
-# USERS SYSTEM SAFE
+# USERS SYSTEM
 # =========================
 
 def load_users():
@@ -47,7 +47,6 @@ def save_user(user_id):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     chat_id = update.effective_chat.id
-
     save_user(chat_id)
 
     texte = """BIENVENUE SUR PANAME DELIVERY 🗼✨
@@ -84,7 +83,7 @@ CLIQUE SUR LA MINI APP 👇"""
     )
 
 # =========================
-# BUTTONS CALLBACK
+# CALLBACK BUTTONS
 # =========================
 
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -126,7 +125,7 @@ On vous livre même si vous êtes dans le fond du 77 ou le fond du 78 ✌️"""
         )
 
 # =========================
-# BROADCAST (ADMIN)
+# BROADCAST ADMIN
 # =========================
 
 async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -154,7 +153,7 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"Envoyé à {sent} utilisateurs")
 
 # =========================
-# USERS LIST (ADMIN)
+# USERS LIST (AVEC NOM + USERNAME)
 # =========================
 
 async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -168,10 +167,20 @@ async def users_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Aucun utilisateur")
         return
 
-    text = "📋 LISTE USERS (IDs uniquement)\n\n"
+    text = "📋 LISTE USERS\n\n"
 
     for user_id in users:
-        text += f"🆔 {user_id}\n"
+
+        try:
+            chat = await context.bot.get_chat(user_id)
+
+            name = chat.first_name if chat.first_name else "?"
+            username = f"@{chat.username}" if chat.username else "pas de username"
+
+            text += f"🆔 {user_id} | {name} | {username}\n"
+
+        except:
+            text += f"🆔 {user_id} | inaccessible\n"
 
     await update.message.reply_text(text)
 
