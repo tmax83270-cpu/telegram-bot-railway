@@ -77,7 +77,7 @@ CLIQUE SUR LA MINI APP POUR AVOIR ACCES AU MENU, INFOS, PROMO ETC  👇👇
             InlineKeyboardButton("📢 Telegram", url="https://t.me/+GKfz6FwT-hg5NGJk")
         ],
         [
-            InlineKeyboardButton("🛒 Mini-App", web_app=WebAppInfo(url="https://white-inky.vercel.app/"))
+            InlineKeyboardButton("🛒 Mini-App", web_app=WebAppInfo(url="https://parfumwhite2.vercel.app/"))
         ],
         [
             InlineKeyboardButton("ℹ️ Information", callback_data="info"),
