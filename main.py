@@ -78,11 +78,8 @@ CLIQUE SUR LA MINI APP POUR AVOIR ACCES AU MENU, INFOS, PROMO ETC  👇👇
         ],
         [
             InlineKeyboardButton("🛒 Mini-App", web_app=WebAppInfo(url="https://parfumwhite2.vercel.app/"))
-        ],
-        [
-            InlineKeyboardButton("ℹ️ Information", callback_data="info"),
-            InlineKeyboardButton("✉️ Contact", callback_data="contact")
         ]
+        
     ]
 
     await context.bot.send_photo(
