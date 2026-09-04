@@ -11,11 +11,11 @@ CONFIG
 
 =========================
 
-TOKEN = “MET_TON_NOUVEAU_TOKEN_ICI”
+TOKEN = "8864212024:AAG-6cttyivxxIcRTh4g9djZ3upJ6hgdcdY"
 
 ADMIN_ID = 7047054214
 
-USERS_FILE = “users.json”
+USERS_FILE = "users.json"
 
 =========================
 
