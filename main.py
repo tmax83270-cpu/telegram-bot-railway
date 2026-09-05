@@ -264,5 +264,3 @@ app_bot.add_handler(CallbackQueryHandler(button_handler))
 
 print("Bot en ligne...")
 app_bot.run_polling()
-
-Pourquoi ça marche ps 
