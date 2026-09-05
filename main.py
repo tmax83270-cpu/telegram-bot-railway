@@ -59,7 +59,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     texte = """BIENVENUE SUR PANAME DELIVERY 🗼
 
-🔹 Zone : Toulon & Alentours 
+🔹 Zone : Paris & Ile De France  
 🔹 Horaires : 14h/02h – 7j/7
 🔹 Paiement : Cash uniquement
 🔹 Livraison & Meet-up : Rapide et discret
