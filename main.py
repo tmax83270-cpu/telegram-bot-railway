@@ -57,10 +57,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     save_user(chat_id)
 
-    texte = """BIENVENUE SUR TOULON DELIVERY ☀️
+    texte = """BIENVENUE SUR PANAME DELIVERY 🗼
 
 🔹 Zone : Toulon & Alentours 
-🔹 Horaires : 14h/00h – 7j/7
+🔹 Horaires : 14h/02h – 7j/7
 🔹 Paiement : Cash uniquement
 🔹 Livraison & Meet-up : Rapide et discret
 
@@ -76,7 +76,7 @@ CLIQUE SUR LA MINI APP POUR AVOIR ACCES AU MENU, INFOS, PROMO ETC  👇👇
             InlineKeyboardButton("📢 Telegram", url="https://t.me/+GKfz6FwT-hg5NGJk")
         ],
         [
-            InlineKeyboardButton("🛒 Mini-App", web_app=WebAppInfo(url="https://toulondelivery.vercel.app/"))
+            InlineKeyboardButton("🛒 Mini-App", web_app=WebAppInfo(url="https://panamedelivery.vercel.app/"))
         ]
         
     ]
